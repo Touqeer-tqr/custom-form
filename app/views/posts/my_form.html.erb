@@ -1,3 +1,78 @@
+<style type='text/css'>
+  .slider.slider-horizontal{ margin: 0 20px; }
+  .slider-selection{background: #66abff !important;}
+</style>
+<script type="text/javascript">
+  formatDigits = function(number, type) {
+    return type + number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  };
+  function setOnChangeListner(fields, ranges, slider){
+    $('#'+fields[0]).on('select.editable-select', function(e){
+      max = $('#'+fields[1]);
+      if(max.val() == 'Any'){
+        max = ranges[1];
+      }
+      else{
+        max = parseFloat(max.val().replace(/\$/g,''));
+      }
+      min = $('#'+fields[0]);
+      if(min.val() == 'Any'){
+        min = ranges[0]
+      }else{
+        min = parseFloat(this.value.replace(/\$/g,''))
+      }
+      slider.setValue([min, max], false, false);
+    });
+
+    $('#'+fields[1]).on('select.editable-select', function (e) {
+      if(this.value == 'Any'){
+        max = ranges[1]
+      }else{
+        max = parseFloat(this.value.replace(/\$/g,''))
+      }
+      min = $('#', fields[0]);
+      if(min.val() == 'Any'){
+        min = ranges[0]
+      }else{
+        min = parseFloat($('#'+fields[0]).val().replace(/\$/g,''))
+      }
+      slider.setValue([min, max], false, false);
+    });
+
+    $('#'+fields[0]).on("input", function(e){
+      max = $('#'+fields[1]);
+      if(max.val() == 'Any' || max.val() == ''){
+        max = ranges[1];
+      }
+      else{
+        max = parseFloat(max.val().replace(/\$/g,''));
+      }
+      if(this.value == 'Any' || this.value == ''){
+        min = ranges[0];
+      }else{
+        min = parseFloat(this.value.replace(/\$/g,''));
+      }
+      slider.setValue([min, max], false, false);
+    });
+
+    $('#'+fields[1]).on("input", function(e){
+      if(this.value == 'Any' || this.value == ''){
+        max = ranges[1]
+      }else{
+        max = parseFloat(this.value.replace(/\$/g,''))
+      }
+      min = $('#'+fields[0]);
+      if(min.val() == 'Any' || min.val() == ''){
+        min = ranges[0];
+      }else{
+        min = parseFloat(min.val().replace(/\$/g,''));
+      }
+      slider.setValue([min, max], false, false);
+    });
+  }
+</script>
 <%= form_for root_path do |f| %>
-  <%= f.enum_select :billing_status %>
+  <%= f.range_selector [:min_rank, :max_rank], [0, 100], drop_down_options, type: 'amount' %>
+  <br>
+  <%= f.range_selector [:min_rank2, :max_rank2], [0, 10000], drop_down_options2 %>
 <% end %>
