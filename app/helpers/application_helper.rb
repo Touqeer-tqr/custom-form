@@ -13,10 +13,19 @@ module ApplicationHelper
       options[:slider_step] = 1 if options[:slider_step].nil?
       options[:value] = [select_options.keys.first, select_options.keys.last] if options[:value].nil?
       options[:type] = options[:type] == 'amount' ? '$' : ''
+      options[:selector] = true if options[:selector].nil?
       selectors = selectors.map &:to_s
-      select_tag(selectors[0], options_for_select(select_options), value: options[:value][0])+
+      (if options[:selector]
+        select_tag(selectors[0], options_for_select(select_options), value: options[:value][0])
+      else
+        text_field_tag(selectors[0], nil, value: options[:value][0])
+      end)+
       text_field_tag(selectors[0]+'_'+selectors[1], nil, data: {'slider-step': options[:slider_step]})+
-      select_tag(selectors[1], options_for_select(select_options), value: options[:value][1])+
+      (if options[:selector]
+        select_tag(selectors[1], options_for_select(select_options), value: options[:value][1])
+      else
+        text_field_tag(selectors[1], nil, value: options[:value][1])
+      end)+
       generate_script(selectors, ranges, options).html_safe
     end
 
@@ -24,51 +33,7 @@ module ApplicationHelper
     def generate_script(selectors, ranges, options)
       return <<-SCRIPT
         <script type='text/javascript'>
-          $('##{selectors[0]}').editableSelect({filter: #{options[:suggestions]}});
-          $('##{selectors[1]}').editableSelect({filter: #{options[:suggestions]}});
-          if ($('##{selectors[1]}').val() == '#{options[:value][1]}'){
-            slidevalue = '#{ranges[1]}';
-          }
-          else{
-            slidevalue = $('##{selectors[1]}').val();
-          }
-          if ($('##{selectors[0]}').val() == '#{options[:value][0]}'){
-            slideMinValue = '#{ranges[0]}';
-          }
-          else{
-            slideMinValue = $('##{selectors[0]}').val();
-          }
-          #{selectors[0]+'_'+selectors[1]}_slider = new Slider('##{selectors[0]+'_'+selectors[1]}', {
-            id: 'slider12c',
-            min: #{ranges[0]},
-            max: #{ranges[1]},
-            range: true,
-            value: [parseFloat(slideMinValue.replace('$', '')), parseFloat(slidevalue.replace('$', ''))],
-            tooltip: 'hide'
-          }).on('slide', function(ev) {
-              $('##{selectors[0]}').text(formatDigits(ev[0], '#{options[:type]}'))
-              $('##{selectors[0]}').val(formatDigits(ev[0], '#{options[:type]}'))
-              $('##{selectors[1]}').text(formatDigits(ev[1], '#{options[:type]}'))
-              $('##{selectors[1]}').val(formatDigits(ev[1], '#{options[:type]}'))
-              if( ev[0] <= #{ranges[0]} ){
-                $('##{selectors[0]}').val('#{options[:value][0]}');
-              }
-              if( ev[1] >= #{ranges[1]} ){
-                $('##{selectors[1]}').val('#{options[:value][1]}');
-              }
-          }).on('slideStop', function(ev) {
-              $('##{selectors[0]}').text(formatDigits(ev[0], '#{options[:type]}'))
-              $('##{selectors[0]}').val(formatDigits(ev[0], '#{options[:type]}'))
-              $('##{selectors[1]}').text(formatDigits(ev[1], '#{options[:type]}'))
-              $('##{selectors[1]}').val(formatDigits(ev[1], '#{options[:type]}'))
-              if( ev[0] <= #{ranges[0]} ){
-                $('##{selectors[0]}').val('#{options[:value][0]}');
-              }
-              if( ev[1] >= #{ranges[1]} ){
-                $('##{selectors[1]}').val('#{options[:value][1]}');
-              }
-          });
-          setOnChangeListner(#{selectors}, #{ranges}, #{selectors[0]+'_'+selectors[1]}_slider)
+          setSlider(#{selectors.map(&:to_s)}, #{ranges.map(&:to_s)}, #{options.to_json}, '#{selectors[0]+'_'+selectors[1]}')
         </script>
       SCRIPT
     end
