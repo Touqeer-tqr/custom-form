@@ -3,16 +3,10 @@
   <head>
     <title>CustomForm</title>
     <%= csrf_meta_tags %>
-
+    <%= javascript_include_tag '//code.jquery.com/jquery-1.12.4.min.js' %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag '//code.jquery.com/jquery-1.12.4.min.js' %>
-    <%= javascript_include_tag '//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js' %>
-    <%= javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.0/bootstrap-slider.min.js' %>
-    <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.0/css/bootstrap-slider.min.css">
   </head>
-
   <body>
     <%= yield %>
   </body>
