@@ -1,7 +1,0 @@
-<%= form_for root_path do |f| %>
-  <%= f.slide_selector [:min_rank, :max_rank], [0, 100], drop_down_options, type: 'amount', selector: false, slider_step: 5 %>
-  <br><br>
-  <%= f.slide_selector [:min_rank2, :max_rank2], [0, 10000], drop_down_options2 %>
-<% end %>
-<br>
-<%= slide_selector_tag [:min_rank3, :max_rank3], [0, 10000], drop_down_options2 %>
