@@ -1,7 +1,10 @@
 class BooksController < ApplicationController
   def index
-    @my_search = OpenStruct.new({search: OpenStruct.new(min_price: nil, max_price: nil, min_rank: nil, max_rank: nil)})
-  end
-  def search
+    @search = OpenStruct.new(
+        min_price: (params[:search][:min_price] rescue nil),
+        max_price: (params[:search][:max_price] rescue nil),
+        min_rank: (params[:search][:min_rank] rescue nil),
+        max_rank: (params[:search][:max_rank] rescue nil)
+      )
   end
 end

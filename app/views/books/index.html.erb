@@ -1,9 +1,9 @@
-<%= form_for @my_search do |f| %>
-  <%= f.slide_selector [:min_price, :max_price], [0, 500], amount_drop_down_options, type: 'amount', selector: false, slider_step: 5 %>
+<%= form_for :search, :as => 'search', path: root_path, method: :get do |f| %>
+  <%= f.slide_selector [:min_price, :max_price], [0, 500], nil, type: 'amount', selector: false, slider_step: 5 %>
   <br><br>
-  <%= f.slide_selector [:min_rank, :max_rank], [0, 5000], simple_drop_down_options %>
+  <%= f.slide_selector [:min_rank, :max_rank], [1, 5000], simple_drop_down_options %>
   <br><br>
   <%= f.submit :submit %>
 <% end %>
 <br>
-<%= slide_selector_tag [:min_rank3, :max_rank3], [0, 5000], simple_drop_down_options %>
+<%= slide_selector_tag [:min_range, :max_range], [0, 5000], simple_drop_down_options %>
